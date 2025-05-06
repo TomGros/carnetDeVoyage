@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Travel diary</string>
+    <string name="fin_du_trajet">End of journey</string>
+    <string name="debuter_le_trajet">Start a journey</string>
+    <string name="titre_application">Travel diary</string>
+</resources>
