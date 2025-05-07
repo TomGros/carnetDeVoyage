@@ -9,18 +9,15 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.Priority;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -42,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean tracking = false;
     // serivce google permettant de géolocaliser
     private FusedLocationProviderClient fusedLocationClient;
+    private LocationRequest locationRequest;
+    private LocationCallback locationCallback;
 
 
 
@@ -53,6 +52,38 @@ public class MainActivity extends AppCompatActivity {
         connexionFirebase();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
+        createLocationRequest();
+
+        // Configurer le callback de localisation
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null || !tracking) {
+                    return;
+                }
+
+                Location location = locationResult.getLastLocation();
+                if (location != null) {
+                    GPSPosition position = new GPSPosition(
+                            location.getLatitude(),
+                            location.getLongitude(),
+                            System.currentTimeMillis()
+                    );
+                    positionList.add(position);
+                    Toast.makeText(MainActivity.this,
+                            "Position ajoutée: " + position.latitude + ", " + position.longitude,
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+
+    }
+
+    private void createLocationRequest() {
+        locationRequest = new LocationRequest.Builder(30000) // 30 secondes
+                .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
+                .setMinUpdateDistanceMeters(5) // 5 mètres minimum entre les mises à jour
+                .build();
     }
 
     public void connexionFirebase(){
@@ -70,44 +101,41 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClickTerminerTrajet(View view) {
         tracking = false;
-        if (handler != null && runnable != null) {
-            handler.removeCallbacks(runnable);
+        stopLocationUpdates();
+        if (positionList.size() > 0) {
+            saveTripToFirestore("voyage1");
+            Toast.makeText(this, "Fin du trajet !", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Aucune position enregistrée", Toast.LENGTH_SHORT).show();
         }
-        saveTripToFirestore("voyage1");
-        Toast.makeText(this, "Fin du trajet !", Toast.LENGTH_SHORT).show();
     }
 
     private void startLocationUpdates() {
-        handler = new Handler(Looper.getMainLooper());
-        runnable = new Runnable() {
-            @Override
-            public void run() {
-                if (tracking) {
-                    if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // Demander la permission si elle n'est pas accordée
-                        return;
-                    }
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1001);
+            return;
+        }
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+    }
 
-                    fusedLocationClient.getLastLocation()
-                            .addOnSuccessListener(new OnSuccessListener<Location>() {
-                                @Override
-                                public void onSuccess(Location location) {
-                                    if (location != null) {
-                                        GPSPosition position = new GPSPosition(
-                                                location.getLatitude(),
-                                                location.getLongitude(),
-                                                System.currentTimeMillis()
-                                        );
-                                        positionList.add(position);
-                                    }
-                                }
-                            });
+    private void stopLocationUpdates() {
+        fusedLocationClient.removeLocationUpdates(locationCallback);
+    }
 
-                    handler.postDelayed(this, 30000); // 30s
-                }
-            }
-        };
-        handler.post(runnable);
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (tracking) {
+            stopLocationUpdates();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (tracking) {
+            startLocationUpdates();
+        }
     }
 
     private void saveTripToFirestore(String voyageName) {
