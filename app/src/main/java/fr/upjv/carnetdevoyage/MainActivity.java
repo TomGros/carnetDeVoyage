@@ -1,5 +1,6 @@
 package fr.upjv.carnetdevoyage;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.Manifest;
@@ -8,6 +9,9 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -31,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseFirestore firebaseFirestore;
 
     // Stocke toutes les positions du trajet dans une liste pour pouvoir l'enregistrer en base par la suite
-    private List<GPSPosition> listePositions = new ArrayList<>();
+    private final List<GPSPosition> listePositions = new ArrayList<>();
     // Si = true alors on est en train de créer un voyage
     private boolean tracking = false;
 
@@ -41,6 +45,10 @@ public class MainActivity extends AppCompatActivity {
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
 
+    // initialisation du nom de voyage avec une valeur par default
+    private String nomVoyageActuel = "voyage";
+
+    private ActivityResultLauncher<Intent> formulaireVoyageLauncher;
 
 
     @Override
@@ -53,13 +61,11 @@ public class MainActivity extends AppCompatActivity {
 
         demanderLocalisation();
 
-        // Configurer le callback de localisation
+        // Configuration du callback de localisation
         locationCallback = new LocationCallback() {
-
-            // Méthode présente dans la class LocationCallBack
             @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null || !tracking) {
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                if (!tracking) {
                     return;
                 }
 
@@ -78,12 +84,26 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        formulaireVoyageLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        nomVoyageActuel = result.getData().getStringExtra("nomVoyage");
+                        Toast.makeText(this, "Début du trajet : " + nomVoyageActuel, Toast.LENGTH_SHORT).show();
+                        tracking = true;
+                        listePositions.clear();
+                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1001);
+                        debuterObtentionDesPositions();
+                    } else {
+                        Toast.makeText(this, "Voyage annulé", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
     }
 
     private void demanderLocalisation() {
         locationRequest = new LocationRequest.Builder(30000) // 30 secondes
                 .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
-                .setMinUpdateDistanceMeters(5) // 5 mètres minimum entre les mises à jour
                 .build();
     }
 
@@ -93,18 +113,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickDebuterTrajet(View view) {
-        Toast.makeText(this, "Début du trajet", Toast.LENGTH_SHORT).show();
-        tracking = true;
-        listePositions.clear();
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1001);
-        debuterObtentionDesPositions();
+        formulaireVoyageLauncher.launch(new Intent(this, FormulaireDebuterVoyage.class));
     }
+
+
 
     public void onClickTerminerTrajet(View view) {
         tracking = false;
         terminerObtentionDesPositions();
         if (!listePositions.isEmpty()) {
-            enregistrerVoyage("voyage2");
+            enregistrerVoyage(nomVoyageActuel);
             Toast.makeText(this, "Fin du trajet !", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Aucune position enregistrée", Toast.LENGTH_SHORT).show();
@@ -125,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void enregistrerVoyage(String nomVoyage) {
 
-        DocumentReference documentReference = this.firebaseFirestore.collection("utilisateur_1").document("voyage");
+        DocumentReference documentReference = this.firebaseFirestore.collection("utilisateur_1").document(nomVoyage);
 
         Map<String, Object> map = new HashMap<>();
         map.put("nom_voyage", nomVoyage);
