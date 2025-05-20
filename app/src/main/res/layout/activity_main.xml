@@ -11,7 +11,7 @@
         android:id="@+id/id_debuterTrajet_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="27dp"
         android:backgroundTint="#4CAF50"
         android:onClick="onClickDebuterTrajet"
         android:text="@string/debuter_le_trajet"
@@ -24,13 +24,14 @@
         android:id="@+id/id_terminerTrajet_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="19dp"
+        android:layout_marginTop="15dp"
         android:backgroundTint="#971A1A"
         android:onClick="onClickTerminerTrajet"
         android:text="@string/fin_du_trajet"
         android:textColorLink="#FFFFFF"
-        app:layout_constraintStart_toStartOf="@+id/id_debuterTrajet_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/id_debuterTrajet_button" />
 
     <TextView
