@@ -10,4 +10,6 @@
     <string name="annuler_voyage">Cancel</string>
     <string name="trajet_en_cours_textView">Current journey</string>
     <string name="enregistrer_la_position">Save current location</string>
+    <string name="titre_page_trajet_en_cours">Journey :</string>
+    <string name="titre_temps_actualisation_textview">Location frequency</string>
 </resources>

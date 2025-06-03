@@ -9,5 +9,13 @@
     <string name="annuler_voyage">Annuler</string>
     <string name="trajet_en_cours_textView">Trajet en cours</string>
     <string name="enregistrer_la_position">Enregistrer la position</string>
+    <string name="titre_page_trajet_en_cours">"Trajet : "</string>
+    <string-array name="duree_options">
+        <item>10</item>
+        <item>30</item>
+        <item>60</item>
+    </string-array>
+    <string name="titre_temps_actualisation_textview">Fréquence de localisation</string>
+
 
 </resources>
