@@ -21,10 +21,24 @@
         android:id="@+id/button_terminer_trajet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="460dp"
+        android:backgroundTint="#971A1A"
         android:onClick="onClickTerminerTrajet"
         android:text="Terminer le trajet"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/id_trajet_en_cours_textview" />
+
+    <Button
+        android:id="@+id/id_enregistrer_la_position_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="107dp"
+        android:backgroundTint="#4355DC"
+        android:text="@string/enregistrer_la_position"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/id_trajet_en_cours_textview" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

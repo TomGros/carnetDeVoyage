@@ -8,5 +8,6 @@
     <string name="nom_voyage">Nom du voyage</string>
     <string name="annuler_voyage">Annuler</string>
     <string name="trajet_en_cours_textView">Trajet en cours</string>
+    <string name="enregistrer_la_position">Enregistrer la position</string>
 
 </resources>
