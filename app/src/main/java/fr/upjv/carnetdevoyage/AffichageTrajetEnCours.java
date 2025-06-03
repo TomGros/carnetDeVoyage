@@ -1,6 +1,7 @@
 package fr.upjv.carnetdevoyage;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -29,7 +30,7 @@ import java.util.Map;
 
 import fr.upjv.carnetdevoyage.model.GPSPosition;
 
-public class activity_trajet_en_cours extends AppCompatActivity {
+public class AffichageTrajetEnCours extends AppCompatActivity {
 
     private String nomVoyage;
     private final List<GPSPosition> listePositions = new ArrayList<>();
@@ -40,16 +41,14 @@ public class activity_trajet_en_cours extends AppCompatActivity {
     private LocationCallback locationCallback;
     private FirebaseFirestore firebaseFirestore;
 
-    private TextView textTitre;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trajet_en_cours);
+        setContentView(R.layout.activity_affichage_trajet_en_cours);
 
         nomVoyage = getIntent().getStringExtra("nomVoyage");
-        textTitre = findViewById(R.id.id_trajet_en_cours_textview);
-        textTitre.setText("Trajet : " + nomVoyage);
+        TextView textTitreDeLaPage = findViewById(R.id.id_trajet_en_cours_textview);
+        textTitreDeLaPage.setText(String.format("%s%s", getString(R.string.titre_page_trajet_en_cours), nomVoyage));
 
         firebaseFirestore = FirebaseFirestore.getInstance();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -57,7 +56,7 @@ public class activity_trajet_en_cours extends AppCompatActivity {
         demanderLocalisation();
         configurerLocationCallback();
 
-        // Démarrer le suivi
+        // Début du suivi des positions
         tracking = true;
         listePositions.clear();
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1001);
@@ -65,7 +64,7 @@ public class activity_trajet_en_cours extends AppCompatActivity {
     }
 
     private void demanderLocalisation() {
-        locationRequest = new LocationRequest.Builder(30000) // 30 secondes
+        locationRequest = new LocationRequest.Builder(30000) // TODO 30 secondes mais à changer pour le temps choisi par user
                 .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
                 .build();
     }
@@ -84,7 +83,7 @@ public class activity_trajet_en_cours extends AppCompatActivity {
                             System.currentTimeMillis()
                     );
                     listePositions.add(position);
-                    Toast.makeText(activity_trajet_en_cours.this,
+                    Toast.makeText(AffichageTrajetEnCours.this,
                             "Position ajoutée : " + position.latitude + ", " + position.longitude,
                             Toast.LENGTH_SHORT).show();
                 }

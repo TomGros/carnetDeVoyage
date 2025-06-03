@@ -8,5 +8,6 @@
     <string name="nom_voyage">Nom du voyage</string>
     <string name="annuler_voyage">Annuler</string>
     <string name="trajet_en_cours_textView">Trajet en cours</string>
+    <string name="titre_page_trajet_en_cours">"Trajet : "</string>
 
 </resources>

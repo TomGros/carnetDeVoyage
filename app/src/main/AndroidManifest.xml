@@ -15,7 +15,7 @@
         android:theme="@style/Theme.CarnetDeVoyage"
         tools:targetApi="31">
         <activity
-            android:name=".activity_trajet_en_cours"
+            android:name=".AffichageTrajetEnCours"
             android:exported="false" />
         <activity
             android:name=".FormulaireDebuterVoyage"

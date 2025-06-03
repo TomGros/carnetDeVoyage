@@ -24,7 +24,7 @@ public class FormulaireDebuterVoyage extends AppCompatActivity {
         String nomVoyage = nomVoyageEditText.getText().toString().trim();
 
         if (!nomVoyage.isEmpty()) {
-            Intent intent = new Intent(this, activity_trajet_en_cours.class);
+            Intent intent = new Intent(this, AffichageTrajetEnCours.class);
             intent.putExtra("nomVoyage", nomVoyage);
             startActivity(intent);
             finish();

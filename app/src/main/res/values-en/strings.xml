@@ -9,4 +9,5 @@
     <string name="nom_voyage">Name of journey</string>
     <string name="annuler_voyage">Cancel</string>
     <string name="trajet_en_cours_textView">Current journey</string>
+    <string name="titre_page_trajet_en_cours">Journey :</string>
 </resources>
