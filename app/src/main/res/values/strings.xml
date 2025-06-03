@@ -2,6 +2,7 @@
     <string name="app_name">Carnet de Voyage</string>
     <string name="fin_du_trajet">Fin du trajet</string>
     <string name="debuter_le_trajet">Débuter un trajet</string>
+    <string name="nouveau_trajet">Nouveau trajet</string>
     <string name="titre_application">Carnet de Voyage</string>
     <string name="titre_formulaire">Nouveau voyage</string>
     <string name="nom_voyage">Nom du voyage</string>

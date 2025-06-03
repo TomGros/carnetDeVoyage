@@ -3,6 +3,7 @@
     <string name="app_name">Travel diary</string>
     <string name="fin_du_trajet">End of journey</string>
     <string name="debuter_le_trajet">Start a journey</string>
+    <string name="nouveau_trajet">New journey</string>
     <string name="titre_application">Travel diary</string>
     <string name="titre_formulaire">New journey</string>
     <string name="nom_voyage">Name of journey</string>

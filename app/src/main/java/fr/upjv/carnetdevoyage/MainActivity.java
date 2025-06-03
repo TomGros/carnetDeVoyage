@@ -116,8 +116,6 @@ public class MainActivity extends AppCompatActivity {
         formulaireVoyageLauncher.launch(new Intent(this, FormulaireDebuterVoyage.class));
     }
 
-
-
     public void onClickTerminerTrajet(View view) {
         tracking = false;
         terminerObtentionDesPositions();
