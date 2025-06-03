@@ -8,4 +8,5 @@
     <string name="titre_formulaire">New journey</string>
     <string name="nom_voyage">Name of journey</string>
     <string name="annuler_voyage">Cancel</string>
+    <string name="trajet_en_cours_textView">Current journey</string>
 </resources>

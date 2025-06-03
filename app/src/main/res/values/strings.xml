@@ -7,5 +7,6 @@
     <string name="titre_formulaire">Nouveau voyage</string>
     <string name="nom_voyage">Nom du voyage</string>
     <string name="annuler_voyage">Annuler</string>
+    <string name="trajet_en_cours_textView">Trajet en cours</string>
 
 </resources>
