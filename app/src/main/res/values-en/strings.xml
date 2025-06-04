@@ -9,7 +9,9 @@
     <string name="nom_voyage">Name of journey</string>
     <string name="annuler_voyage">Cancel</string>
     <string name="trajet_en_cours_textView">Current journey</string>
-    <string name="enregistrer_la_position">Save current location</string>
+    <string name="enregistrer_la_position">Add a position</string>
     <string name="titre_page_trajet_en_cours">Journey :</string>
-    <string name="titre_temps_actualisation_textview">Location frequency</string>
+    <string name="titre_temps_actualisation_textview">Location frequency (sec)</string>
+    <string name="content_description_logo">Logo Travel diary</string>
+    <string name="texte_nb_positions">"Number of positions recorded : "</string>
 </resources>

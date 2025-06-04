@@ -17,6 +17,17 @@
         app:layout_constraintStart_toStartOf="@+id/button_terminer_trajet"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/id_nombre_positions_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/texte_nb_positions"
+        app:layout_constraintTop_toBottomOf="@+id/id_trajet_en_cours_textview"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
     <Button
         android:id="@+id/button_terminer_trajet"
         android:layout_width="wrap_content"
@@ -24,7 +35,7 @@
         android:layout_marginTop="460dp"
         android:backgroundTint="#971A1A"
         android:onClick="onClickTerminerTrajet"
-        android:text="Terminer le trajet"
+        android:text="@string/fin_du_trajet"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/id_trajet_en_cours_textview" />

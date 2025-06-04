@@ -33,6 +33,7 @@ public class AffichageTrajetEnCours extends AppCompatActivity {
 
     private String nomVoyage;
     private String delaiActualisation;
+    private TextView textViewNombrePositions;
     private final List<GPSPosition> listePositions = new ArrayList<>();
     private boolean tracking = false;
 
@@ -62,6 +63,8 @@ public class AffichageTrajetEnCours extends AppCompatActivity {
         listePositions.clear();
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1001);
         debuterObtentionDesPositions();
+
+        textViewNombrePositions = findViewById(R.id.id_nombre_positions_textview);
     }
 
     private void demanderLocalisation() {
@@ -84,6 +87,7 @@ public class AffichageTrajetEnCours extends AppCompatActivity {
                             System.currentTimeMillis()
                     );
                     listePositions.add(position);
+                    mettreAJourNombrePositions();
                     Toast.makeText(AffichageTrajetEnCours.this,
                             "Position ajoutée : " + position.latitude + ", " + position.longitude,
                             Toast.LENGTH_SHORT).show();
@@ -157,6 +161,7 @@ public class AffichageTrajetEnCours extends AppCompatActivity {
                             System.currentTimeMillis()
                     );
                     listePositions.add(position);
+                    mettreAJourNombrePositions();
                     Toast.makeText(AffichageTrajetEnCours.this,
                             "Position ajoutée manuellement : " + position.latitude + ", " + position.longitude,
                             Toast.LENGTH_SHORT).show();
@@ -166,4 +171,9 @@ public class AffichageTrajetEnCours extends AppCompatActivity {
             }
         }, Looper.getMainLooper());
     }
+    private void mettreAJourNombrePositions() {
+        String texte = "" + listePositions.size();
+        textViewNombrePositions.setText(String.format("%s%s", getString(R.string.texte_nb_positions), texte));
+    }
+
 }
