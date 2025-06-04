@@ -1,7 +1,6 @@
 package fr.upjv.carnetdevoyage;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -33,6 +32,7 @@ import fr.upjv.carnetdevoyage.model.GPSPosition;
 public class AffichageTrajetEnCours extends AppCompatActivity {
 
     private String nomVoyage;
+    private String delaiActualisation;
     private final List<GPSPosition> listePositions = new ArrayList<>();
     private boolean tracking = false;
 
@@ -44,9 +44,10 @@ public class AffichageTrajetEnCours extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_affichage_trajet_en_cours);
+        setContentView(R.layout.activite_affichage_trajet_en_cours);
 
         nomVoyage = getIntent().getStringExtra("nomVoyage");
+        delaiActualisation = getIntent().getStringExtra("delaiActualisation");
         TextView textTitreDeLaPage = findViewById(R.id.id_trajet_en_cours_textview);
         textTitreDeLaPage.setText(String.format("%s%s", getString(R.string.titre_page_trajet_en_cours), nomVoyage));
 
@@ -64,7 +65,7 @@ public class AffichageTrajetEnCours extends AppCompatActivity {
     }
 
     private void demanderLocalisation() {
-        locationRequest = new LocationRequest.Builder(30000) // TODO 30 secondes mais à changer pour le temps choisi par user
+        locationRequest = new LocationRequest.Builder(Long.parseLong(delaiActualisation)*1000) // selon le temps choisi par l'utilisateur
                 .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
                 .build();
     }
@@ -116,7 +117,7 @@ public class AffichageTrajetEnCours extends AppCompatActivity {
     }
 
     private void enregistrerVoyage(String nomVoyage) {
-        DocumentReference documentReference = firebaseFirestore.collection("utilisateur_1").document(nomVoyage);
+        DocumentReference documentReference = firebaseFirestore.collection("utilisateur_1").document(nomVoyage); // à changer pour d'autres users
 
         Map<String, Object> map = new HashMap<>();
         map.put("nom_voyage", nomVoyage);
@@ -135,5 +136,34 @@ public class AffichageTrajetEnCours extends AppCompatActivity {
 
             documentReference.collection("positions").document("position" + i).set(positionMap);
         }
+    }
+
+    public void onClickAjouterPositionManuellement(View view) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1001);
+            return;
+        }
+
+        fusedLocationClient.requestLocationUpdates(locationRequest, new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                fusedLocationClient.removeLocationUpdates(this); // On arrête dès qu'on a recupere la position
+
+                Location location = locationResult.getLastLocation();
+                if (location != null) {
+                    GPSPosition position = new GPSPosition(
+                            location.getLatitude(),
+                            location.getLongitude(),
+                            System.currentTimeMillis()
+                    );
+                    listePositions.add(position);
+                    Toast.makeText(AffichageTrajetEnCours.this,
+                            "Position ajoutée manuellement : " + position.latitude + ", " + position.longitude,
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(AffichageTrajetEnCours.this, "Position actuelle indisponible", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, Looper.getMainLooper());
     }
 }

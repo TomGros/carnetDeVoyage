@@ -35,6 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="107dp"
         android:backgroundTint="#4355DC"
+        android:onClick="onClickAjouterPositionManuellement"
         android:text="@string/enregistrer_la_position"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

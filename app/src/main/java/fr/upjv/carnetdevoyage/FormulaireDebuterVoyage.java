@@ -17,7 +17,7 @@ public class FormulaireDebuterVoyage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_formulaire_debuter_voyage);
+        setContentView(R.layout.activite_formulaire_debuter_voyage);
 
         nomVoyageEditText = findViewById(R.id.id_nom_voyage_edittext);
 
@@ -47,7 +47,7 @@ public class FormulaireDebuterVoyage extends AppCompatActivity {
             startActivity(intent);
             finish();
         } else {
-            Toast.makeText(this, "Veuillez entrer un nom de voyage et choisir une durée d'actualisation", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Veuillez saisir le nom du voyage", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -8,19 +8,19 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class ActivitePrincipale extends AppCompatActivity {
 
     private ActivityResultLauncher<Intent> formulaireVoyageLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activite_principale);
 
         formulaireVoyageLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-                    // Ici tu peux gérer le retour du formulaire si besoin (facultatif maintenant)
+                    // pour gerer le retour du formualaire
                 }
         );
     }
