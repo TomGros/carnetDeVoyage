@@ -18,6 +18,7 @@
     <string name="titre_temps_actualisation_textview">Fréquence de localisation (sec)</string>
     <string name="content_description_logo">Logo Carnet de Voyage</string>
     <string name="texte_nb_positions">Nombre de positions enregistrées :</string>
+    <string name="titre_liste_trajets">Liste des voyages</string>
 
 
 </resources>

@@ -14,4 +14,5 @@
     <string name="titre_temps_actualisation_textview">Location frequency (sec)</string>
     <string name="content_description_logo">Logo Travel diary</string>
     <string name="texte_nb_positions">"Number of positions recorded : "</string>
+    <string name="titre_liste_trajets">Travel list</string>
 </resources>
