@@ -37,12 +37,14 @@ public class FormulaireDebuterVoyage extends AppCompatActivity {
 
     public void onClickValiderVoyage(View view) {
         String nomVoyage = nomVoyageEditText.getText().toString().trim();
+        String nomUtilisateur = "utilisateur_1";
         Spinner dureeSpinner = findViewById(R.id.id_duree_spinner);
         String dureeChoisie = dureeSpinner.getSelectedItem().toString();
 
         if (!nomVoyage.isEmpty() && !dureeChoisie.isEmpty()) {
             Intent intent = new Intent(this, AffichageTrajetEnCours.class);
             intent.putExtra("nomVoyage", nomVoyage);
+            intent.putExtra("nomUtilisateur", nomUtilisateur);
             intent.putExtra("delaiActualisation", dureeChoisie);
             startActivity(intent);
             finish();

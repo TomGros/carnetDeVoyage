@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,19 +9,71 @@
     <fragment
         android:id="@+id/map_fragment"
         android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Overlay pour titre et bouton -->
+    <!-- Overlay en haut : Bouton Partager -->
+
+    <!-- Overlay en bas : Nom du voyage + Poubelle -->
     <LinearLayout
-        android:id="@+id/map_overlay_top"
-        android:layout_width="match_parent"
+        android:id="@+id/share_overlay"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="61dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/bg_overlay_card"
+        android:elevation="8dp"
+        android:gravity="center_vertical"
+        android:onClick="onClickPartagerVoyage"
         android:orientation="horizontal"
-        android:padding="12dp"
-        android:background="#CCFFFFFF"
-        android:elevation="6dp"
+        android:paddingStart="16dp"
+        android:paddingTop="12dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/share_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="Partager"
+            android:onClick="onClickPartagerVoyage"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/button_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Partager"
+            android:onClick="onClickPartagerVoyage"
+            android:src="@android:drawable/ic_menu_share"
+            app:tint="#000000" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/map_overlay_bottom"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="53dp"
+        android:background="@drawable/bg_overlay_card"
+        android:elevation="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <TextView
             android:id="@+id/nom_voyage_textview"
@@ -28,17 +81,20 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Nom du voyage"
-            android:textStyle="bold"
-            android:textSize="18sp" />
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <ImageButton
-            android:id="@+id/button_mail"
+            android:id="@+id/button_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="Envoyer par mail"
-            android:src="@android:drawable/ic_menu_send"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:tint="@android:color/black" />
+            android:contentDescription="Supprimer le trajet"
+            android:onClick="onClickSupprimerVoyage"
+            android:src="@drawable/ic_delete"
+            app:tint="#F44336" /> <!-- Rouge vif style Material -->
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

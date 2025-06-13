@@ -98,6 +98,7 @@ public class ActivitePrincipale extends AppCompatActivity implements VoyageAdapt
     public void onVoyageClick(Voyage voyage) {
         Intent intent = new Intent(this, ConsulterVoyage.class);
         intent.putExtra("nom_voyage", voyage.getNomVoyage());
+        intent.putExtra("nomUtilisateur", "utilisateur_1");
         startActivity(intent);
     }
 

@@ -32,6 +32,7 @@ import fr.upjv.carnetdevoyage.model.GPSPosition;
 public class AffichageTrajetEnCours extends AppCompatActivity {
 
     private String nomVoyage;
+    private String nomUtilisateur;
     private String delaiActualisation;
     private TextView textViewNombrePositions;
     private final List<GPSPosition> listePositions = new ArrayList<>();
@@ -48,6 +49,7 @@ public class AffichageTrajetEnCours extends AppCompatActivity {
         setContentView(R.layout.activite_affichage_trajet_en_cours);
 
         nomVoyage = getIntent().getStringExtra("nomVoyage");
+        nomUtilisateur = getIntent().getStringExtra("nomUtilisateur");
         delaiActualisation = getIntent().getStringExtra("delaiActualisation");
         TextView textTitreDeLaPage = findViewById(R.id.id_trajet_en_cours_textview);
         textTitreDeLaPage.setText(String.format("%s%s", getString(R.string.titre_page_trajet_en_cours), nomVoyage));
@@ -121,7 +123,7 @@ public class AffichageTrajetEnCours extends AppCompatActivity {
     }
 
     private void enregistrerVoyage(String nomVoyage) {
-        DocumentReference documentReference = firebaseFirestore.collection("utilisateur_1").document(nomVoyage); // à changer pour d'autres users
+        DocumentReference documentReference = firebaseFirestore.collection(nomUtilisateur).document(nomVoyage);
 
         Map<String, Object> map = new HashMap<>();
         map.put("nom_voyage", nomVoyage);

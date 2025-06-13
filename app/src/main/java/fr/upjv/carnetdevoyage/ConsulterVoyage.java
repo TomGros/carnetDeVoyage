@@ -2,7 +2,9 @@ package fr.upjv.carnetdevoyage;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +21,8 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,11 +30,12 @@ public class ConsulterVoyage extends FragmentActivity implements OnMapReadyCallb
 
     private GoogleMap mMap;
     private String nomVoyage;
+    private String nomUtilisateur;
     private FirebaseFirestore firestore;
     private final List<LatLng> listePoints = new ArrayList<>();
 
     private TextView nomVoyageTextView;
-    private ImageButton buttonMail;
+
 
 
     @Override
@@ -39,18 +44,14 @@ public class ConsulterVoyage extends FragmentActivity implements OnMapReadyCallb
         setContentView(R.layout.activite_consultation_voyage_map);
 
         nomVoyage = getIntent().getStringExtra("nom_voyage");
+        nomUtilisateur = getIntent().getStringExtra("nomUtilisateur");
 
         nomVoyageTextView = findViewById(R.id.nom_voyage_textview);
-        buttonMail = findViewById(R.id.button_mail);
+
 
         if (nomVoyage != null) {
             nomVoyageTextView.setText(nomVoyage);
         }
-
-        // Pour gautier : bouton mail
-        buttonMail.setOnClickListener(v ->
-                Toast.makeText(this, "Fonction mail à venir", Toast.LENGTH_SHORT).show()
-        );
 
 
         nomVoyage = getIntent().getStringExtra("nom_voyage");
@@ -68,7 +69,7 @@ public class ConsulterVoyage extends FragmentActivity implements OnMapReadyCallb
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
 
-        firestore.collection("utilisateur_1")
+        firestore.collection(nomUtilisateur)
                 .document(nomVoyage)
                 .collection("positions")
                 .get()
@@ -114,6 +115,43 @@ public class ConsulterVoyage extends FragmentActivity implements OnMapReadyCallb
     }
 
 
+    // Pour gautier : bouton mail
+    public void onClickPartagerVoyage(View view) {
+        Toast.makeText(this, "Fonction mail à venir", Toast.LENGTH_SHORT).show();
+    }
+
+    public void onClickSupprimerVoyage(View view) {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("Supprimer le voyage ?")
+                .setPositiveButton("Oui, supprimer", (dialog, which) -> supprimerVoyage())
+                .setNegativeButton("Annuler", null)
+                .show();
+    }
+
+    private void supprimerVoyage() {
+        firestore.collection(nomUtilisateur)
+                .document(nomVoyage)
+                .collection("positions")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    for (QueryDocumentSnapshot doc : querySnapshot) {
+                        doc.getReference().delete();
+                    }
+                    firestore.collection(nomUtilisateur)
+                            .document(nomVoyage)
+                            .delete()
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(this, "Voyage supprimé avec succès", Toast.LENGTH_SHORT).show();
+                                finish();
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(this, "Erreur lors de la suppression du voyage", Toast.LENGTH_SHORT).show();
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Erreur lors de la suppression des positions", Toast.LENGTH_SHORT).show();
+                });
+    }
 }
 
 
