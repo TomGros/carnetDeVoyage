@@ -1,7 +1,9 @@
 package fr.upjv.carnetdevoyage;
 
+import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -12,6 +14,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -26,10 +29,29 @@ public class ConsulterVoyage extends FragmentActivity implements OnMapReadyCallb
     private FirebaseFirestore firestore;
     private final List<LatLng> listePoints = new ArrayList<>();
 
+    private TextView nomVoyageTextView;
+    private ImageButton buttonMail;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activite_consultation_voyage_map);
+
+        nomVoyage = getIntent().getStringExtra("nom_voyage");
+
+        nomVoyageTextView = findViewById(R.id.nom_voyage_textview);
+        buttonMail = findViewById(R.id.button_mail);
+
+        if (nomVoyage != null) {
+            nomVoyageTextView.setText(nomVoyage);
+        }
+
+        // Pour gautier : bouton mail
+        buttonMail.setOnClickListener(v ->
+                Toast.makeText(this, "Fonction mail à venir", Toast.LENGTH_SHORT).show()
+        );
+
 
         nomVoyage = getIntent().getStringExtra("nom_voyage");
         firestore = FirebaseFirestore.getInstance();
@@ -40,7 +62,6 @@ public class ConsulterVoyage extends FragmentActivity implements OnMapReadyCallb
             mapFragment.getMapAsync(this);
         }
 
-        Toast.makeText(this, "page consulter voyage : " , Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -61,12 +82,26 @@ public class ConsulterVoyage extends FragmentActivity implements OnMapReadyCallb
                     }
 
                     if (!listePoints.isEmpty()) {
-                        mMap.addPolyline(new PolylineOptions().addAll(listePoints));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(listePoints.get(0), 12));
+                        mMap.addPolyline(new PolylineOptions()
+                                .addAll(listePoints)
+                                .color(Color.RED)
+                                .width(8f));
+
+                        LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+                        for (LatLng point : listePoints) {
+                            boundsBuilder.include(point);
+                        }
+                        LatLngBounds bounds = boundsBuilder.build();
+
+                        int padding = 150;
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+                    } else {
+                        Toast.makeText(this, "Aucune position à afficher" , Toast.LENGTH_SHORT).show();
                     }
                 })
-                .addOnFailureListener(e -> Log.e("MAP_VOYAGE", "Erreur chargement positions", e));
+                .addOnFailureListener(e -> Toast.makeText(this, "Erreur lors du chargement des positions" , Toast.LENGTH_SHORT).show());
     }
+
 }
 
 
