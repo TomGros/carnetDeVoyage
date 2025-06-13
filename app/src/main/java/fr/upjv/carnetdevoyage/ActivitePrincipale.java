@@ -97,7 +97,9 @@ public class ActivitePrincipale extends AppCompatActivity implements VoyageAdapt
     @Override
     public void onVoyageClick(Voyage voyage) {
         Toast.makeText(this, "Voyage sélectionné : " + voyage.getNomVoyage(), Toast.LENGTH_SHORT).show();
-        // Navigation vers le trajet sélectionné à faire
+        Intent intent = new Intent(this, ConsulterVoyage.class);
+        intent.putExtra("nom_voyage", voyage.getNomVoyage());
+        startActivity(intent);
     }
 
     public void onClickDebuterTrajet(View view) {

@@ -14,12 +14,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CarnetDeVoyage"
         tools:targetApi="31">
+
+        <!-- Clé API Google Maps -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <!-- Activités -->
         <activity
             android:name=".AffichageTrajetEnCours"
             android:exported="false" />
         <activity
             android:name=".FormulaireDebuterVoyage"
             android:exported="false" />
+
+        <activity
+            android:name=".ConsulterVoyage"
+            android:exported="false" />
+
         <activity
             android:name=".ActivitePrincipale"
             android:exported="true">
