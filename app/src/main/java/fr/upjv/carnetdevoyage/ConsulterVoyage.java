@@ -73,7 +73,18 @@ public class ConsulterVoyage extends FragmentActivity implements OnMapReadyCallb
                 .collection("positions")
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
+                    List<QueryDocumentSnapshot> documents = new ArrayList<>();
                     for (QueryDocumentSnapshot doc : querySnapshot) {
+                        documents.add(doc);
+                    }
+
+                    documents.sort((d1, d2) -> {
+                        Long t1 = d1.getLong("timestamp");
+                        Long t2 = d2.getLong("timestamp");
+                        return Long.compare(t1 != null ? t1 : 0, t2 != null ? t2 : 0);
+                    });
+
+                    for (QueryDocumentSnapshot doc : documents) {
                         Double lat = doc.getDouble("latitude");
                         Double lng = doc.getDouble("longitude");
                         if (lat != null && lng != null) {
@@ -96,11 +107,12 @@ public class ConsulterVoyage extends FragmentActivity implements OnMapReadyCallb
                         int padding = 150;
                         mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
                     } else {
-                        Toast.makeText(this, "Aucune position à afficher" , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Aucune position à afficher", Toast.LENGTH_SHORT).show();
                     }
                 })
-                .addOnFailureListener(e -> Toast.makeText(this, "Erreur lors du chargement des positions" , Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> Toast.makeText(this, "Erreur lors du chargement des positions", Toast.LENGTH_SHORT).show());
     }
+
 
 }
 
