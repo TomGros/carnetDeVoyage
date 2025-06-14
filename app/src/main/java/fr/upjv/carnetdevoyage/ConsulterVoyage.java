@@ -7,7 +7,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.content.Intent;
+import android.net.Uri;
+import androidx.core.content.FileProvider;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
@@ -22,6 +24,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,10 +123,73 @@ public class ConsulterVoyage extends FragmentActivity implements OnMapReadyCallb
                 .addOnFailureListener(e -> Toast.makeText(this, "Erreur lors du chargement des positions", Toast.LENGTH_SHORT).show());
     }
 
-
-    // Pour gautier : bouton mail
     public void onClickPartagerVoyage(View view) {
-        Toast.makeText(this, "Fonction mail à venir", Toast.LENGTH_SHORT).show();
+        if (listePoints.isEmpty()) {
+            Toast.makeText(this, "Aucun trajet à partager", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        File gpxFile = genererFichierGPX();
+        if (gpxFile != null) {
+            envoyerParEmail(gpxFile);
+        } else {
+            Toast.makeText(this, "Erreur lors de la génération du fichier GPX", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private File genererFichierGPX() {
+        try {
+            File gpxFile = new File(getCacheDir(), nomVoyage + "_trajet.gpx");
+            FileWriter writer = new FileWriter(gpxFile);
+
+            writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+            writer.write("<gpx version=\"1.1\" creator=\"Carnet de Voyage\">\n");
+            writer.write("  <trk>\n");
+            writer.write("    <name>" + nomVoyage + "</name>\n");
+            writer.write("    <trkseg>\n");
+
+            for (LatLng point : listePoints) {
+                writer.write("      <trkpt lat=\"" + point.latitude + "\" lon=\"" + point.longitude + "\">\n");
+                writer.write("      </trkpt>\n");
+            }
+
+            writer.write("    </trkseg>\n");
+            writer.write("  </trk>\n");
+            writer.write("</gpx>");
+            writer.close();
+            return gpxFile;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private void envoyerParEmail(File gpxFile) {
+        try {
+            Uri fileUri = FileProvider.getUriForFile(
+                    this,
+                    getPackageName() + ".fileprovider",
+                    gpxFile
+            );
+            Intent emailIntent = new Intent(Intent.ACTION_SEND);
+            emailIntent.setType("message/rfc822");
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, nomVoyage);
+            emailIntent.putExtra(Intent.EXTRA_TEXT,
+                    "Veuillez trouver ci-joint le trajet \"" + nomVoyage + "\" au format GPX.");
+            emailIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
+            emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+            Intent chooser = Intent.createChooser(emailIntent, "Envoyer le trajet par email");
+            if (emailIntent.resolveActivity(getPackageManager()) != null) {
+                startActivity(chooser);
+                Toast.makeText(this, "Email envoyé avec succès", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Aucune application email trouvée", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Erreur lors de l'envoi de l'email", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void onClickSupprimerVoyage(View view) {
