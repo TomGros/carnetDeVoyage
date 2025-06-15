@@ -15,4 +15,6 @@
     <string name="content_description_logo">Logo Travel diary</string>
     <string name="texte_nb_positions">"Number of positions recorded : "</string>
     <string name="titre_liste_trajets">Travel list</string>
+    <string name="nom_utilisateur">Username</string>
+    <string name="rechercher">Search</string>
 </resources>

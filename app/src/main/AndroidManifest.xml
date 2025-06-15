@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools" >
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
@@ -13,46 +13,41 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CarnetDeVoyage"
-        tools:targetApi="31">
-
+        tools:targetApi="31" >
         <!-- Clé API Google Maps -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
-
-        <!-- Activités -->
+            android:value="@string/google_maps_key" /> <!-- Activités -->
         <activity
             android:name=".AffichageTrajetEnCours"
             android:exported="false" />
         <activity
             android:name=".FormulaireDebuterVoyage"
             android:exported="false" />
-
         <activity
             android:name=".ConsulterVoyage"
             android:exported="false" />
-
+        <activity
+            android:name=".ActiviteListeTrajetUtilisateur"
+            android:exported="false"/>
         <activity
             android:name=".ActivitePrincipale"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Permet le partage sécurisé des fichiers GPX par email -->
+        </activity> <!-- Permet le partage sécurisé des fichiers GPX par email -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
             android:exported="false"
-            android:grantUriPermissions="true">
+            android:grantUriPermissions="true" >
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
     </application>
 
 </manifest>
